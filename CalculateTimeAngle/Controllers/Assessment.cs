@@ -48,10 +48,11 @@ namespace CalculateTimeAngle.Controllers
 
                 // hour angle starts at 0 = 12  == 360
 
-                int adjustedHour = (anglePerHour * hour) % DegreesInCircle;
-                int adjustedMinutes = (anglePerMinute * minutes % DegreesInCircle);
+                int angleHour = (anglePerHour * hour) % DegreesInCircle;
+                int angleMinutes = (anglePerMinute * minutes % DegreesInCircle);
 
-                angle = adjustedHour + ((double) adjustedMinutes / 1000);
+
+                angle = Math.Abs( angleHour - ((double) angleMinutes));
             }
             catch (Exception ex)
             {
