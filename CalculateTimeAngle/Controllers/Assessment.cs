@@ -10,6 +10,20 @@ namespace CalculateTimeAngle.Controllers
 
         private readonly ILogger<Assessment> _logger;
 
+        private const int DegreesInCircle = 360;
+
+        private const int MinimumHour = 1;
+        private const int MaximumHour = 12;
+        private const int NumberOfHoursPerClock = 12;
+
+        private const int MinimumMinutes = 0;
+        private const int MaximumMinutes = 59;
+        private const int NumberOfMinutesPerHour = 60;
+
+        // TODO: move this to contructor or business logic?
+        private int anglePerHour = (DegreesInCircle / NumberOfHoursPerClock);
+        private int anglePerMinute = (DegreesInCircle / NumberOfMinutesPerHour);
+
         public Assessment(ILogger<Assessment> logger)
         {
             _logger = logger;
@@ -29,15 +43,15 @@ namespace CalculateTimeAngle.Controllers
             // TODO: Limit hour / minutes
             try
             {
-                if (hour < 1 || hour > 12) throw new Exception("Invalid hour");
-                if (minutes < 0 || minutes > 59) throw new Exception("Invalid Minutes");
+                if ( (hour < MinimumHour) || (hour > MaximumHour) ) throw new Exception("Invalid hour");
+                if ( (minutes < MinimumMinutes) || (minutes > MaximumMinutes) ) throw new Exception("Invalid Minutes");  //NOTE: Greather than or Equal
 
                 // hour angle starts at 0 = 12  == 360
-                // TODO: Make constants
-                int adjustedHour = ((360 / 12) * hour) % 360;
-                int adjustedMinutes = ((360 / 60) * minutes % 360);
 
-                angle = adjustedHour + (adjustedMinutes / 100);
+                int adjustedHour = (anglePerHour * hour) % DegreesInCircle;
+                int adjustedMinutes = (anglePerMinute * minutes % DegreesInCircle);
+
+                angle = adjustedHour + ((double) adjustedMinutes / 1000);
             }
             catch (Exception ex)
             {
