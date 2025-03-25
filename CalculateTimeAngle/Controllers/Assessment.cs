@@ -44,15 +44,18 @@ namespace CalculateTimeAngle.Controllers
             try
             {
                 if ( (hour < MinimumHour) || (hour > MaximumHour) ) throw new Exception("Invalid hour");
-                if ( (minutes < MinimumMinutes) || (minutes > MaximumMinutes) ) throw new Exception("Invalid Minutes");  //NOTE: Greather than or Equal
+                if ( (minutes < MinimumMinutes) || (minutes > MaximumMinutes) ) throw new Exception("Invalid Minutes"); 
 
                 // hour angle starts at 0 = 12  == 360
 
                 int angleHour = (anglePerHour * hour) % DegreesInCircle;
                 int angleMinutes = (anglePerMinute * minutes % DegreesInCircle);
 
+                // Adjust that hour hand moves per minute
+                double adjustedHour = (double) angleHour;
+                if (angleMinutes > 0) adjustedHour += ((double) anglePerHour / ( (double)DegreesInCircle / (double) angleMinutes));
 
-                angle = Math.Abs( angleHour - ((double) angleMinutes));
+                angle = Math.Abs(adjustedHour - ((double) angleMinutes));
             }
             catch (Exception ex)
             {
