@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace CalculateTimeAngle.Controllers
 {
@@ -26,8 +27,25 @@ namespace CalculateTimeAngle.Controllers
 
             // TODO: Try/catch
             // TODO: Limit hour / minutes
+            try
+            {
+                if (hour < 1 || hour > 12) throw new Exception("Invalid hour");
+                if (minutes < 0 || minutes > 59) throw new Exception("Invalid Minutes");
+
+                // hour angle starts at 0 = 12  == 360
+                // TODO: Make constants
+                int adjustedHour = ((360 / 12) * hour) % 360;
+                int adjustedMinutes = ((360 / 60) * minutes % 360);
+
+                angle = adjustedHour + (adjustedMinutes / 100);
+            }
+            catch (Exception ex)
+            {
+                //_logger.LogError(ex.Message);
+                throw;
+            }
+
             // TODO: put logic in "business class"
-            angle = hour + minutes;
 
             return angle;
         }
